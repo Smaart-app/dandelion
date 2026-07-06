@@ -118,22 +118,22 @@ function randomBetween(min, max) {
 }
 
 function resetSeed(seed, fromPuff = false) {
-  const sourceX = width < 620 ? width * 0.34 : width * 0.28;
-  const sourceY = width < 620 ? height * 0.39 : height * 0.46;
-  seed.x = fromPuff ? randomBetween(sourceX, sourceX + width * 0.08) : randomBetween(width * 0.3, width * 0.78);
-  seed.y = fromPuff ? randomBetween(sourceY, sourceY + height * 0.08) : randomBetween(height * 0.36, height * 0.54);
-  seed.vx = randomBetween(0.18, 0.72) + gust * randomBetween(0.28, 0.72);
-  seed.vy = randomBetween(-0.1, 0.16);
-  seed.size = randomBetween(0.75, 1.28);
+  const sourceX = width < 620 ? width * 0.34 : width * 0.31;
+  const sourceY = width < 620 ? height * 0.42 : height * 0.52;
+  seed.x = fromPuff ? randomBetween(sourceX, sourceX + width * 0.05) : randomBetween(width * 0.34, width * 0.66);
+  seed.y = fromPuff ? randomBetween(sourceY, sourceY + height * 0.045) : randomBetween(height * 0.46, height * 0.58);
+  seed.vx = randomBetween(0.1, 0.34) + gust * randomBetween(0.12, 0.28);
+  seed.vy = randomBetween(-0.035, 0.055);
+  seed.size = randomBetween(0.2, 0.42);
   seed.angle = randomBetween(0, Math.PI * 2);
-  seed.spin = randomBetween(-0.025, 0.025);
-  seed.life = randomBetween(0.55, 1);
+  seed.spin = randomBetween(-0.012, 0.012);
+  seed.life = randomBetween(0.28, 0.58);
 }
 
 function seedCountForWidth() {
-  if (width < 620) return 42;
-  if (width < 980) return 58;
-  return 76;
+  if (width < 620) return 18;
+  if (width < 980) return 22;
+  return 28;
 }
 
 function initSeeds() {
@@ -150,9 +150,9 @@ function drawSeed(seed) {
   context.save();
   context.translate(seed.x, seed.y);
   context.rotate(seed.angle);
-  context.globalAlpha = Math.max(0, Math.min(0.85, seed.life));
-  context.strokeStyle = "rgba(74, 66, 45, 0.5)";
-  context.fillStyle = "rgba(255, 255, 255, 0.82)";
+  context.globalAlpha = Math.max(0, Math.min(0.42, seed.life));
+  context.strokeStyle = "rgba(74, 66, 45, 0.32)";
+  context.fillStyle = "rgba(255, 255, 255, 0.56)";
   context.lineWidth = 1;
   const size = seed.size;
 
@@ -165,13 +165,13 @@ function drawSeed(seed) {
     context.beginPath();
     context.moveTo(-5 * size, -13 * size);
     context.quadraticCurveTo((i * 2.5 - 5) * size, -20 * size, (i * 4 - 5) * size, -24 * size);
-    context.strokeStyle = "rgba(255, 255, 255, 0.78)";
+    context.strokeStyle = "rgba(255, 255, 255, 0.5)";
     context.stroke();
   }
 
   context.beginPath();
   context.ellipse(1.2 * size, 2.8 * size, 1.6 * size, 4.2 * size, -0.2, 0, Math.PI * 2);
-  context.fillStyle = "rgba(83, 50, 28, 0.82)";
+  context.fillStyle = "rgba(83, 50, 28, 0.58)";
   context.fill();
   context.restore();
 }
@@ -193,7 +193,7 @@ function animate(now) {
     seed.angle += seed.spin * (delta / 16);
     seed.life -= 0.0007 * (delta / 16);
 
-    if (seed.x > width + 36 || seed.y < height * 0.24 || seed.y > height * 0.68 || seed.life <= 0.05) {
+    if (seed.x > width + 24 || seed.y < height * 0.4 || seed.y > height * 0.66 || seed.life <= 0.04) {
       resetSeed(seed, true);
     }
 
@@ -205,10 +205,10 @@ function animate(now) {
 
 function puff() {
   pointerGust = 1.55;
-  for (let i = 0; i < Math.min(24, seeds.length); i += 1) {
+  for (let i = 0; i < Math.min(12, seeds.length); i += 1) {
     resetSeed(seeds[i], true);
-    seeds[i].vx += randomBetween(1.3, 2.4);
-    seeds[i].vy += randomBetween(-0.24, 0.18);
+    seeds[i].vx += randomBetween(0.55, 1);
+    seeds[i].vy += randomBetween(-0.08, 0.08);
   }
 }
 
@@ -242,8 +242,8 @@ document.querySelectorAll(".mobile-nav a").forEach((link) => {
 
 blowButton.addEventListener("click", puff);
 window.addEventListener("pointermove", (event) => {
-  if (event.clientX < width * 0.42 && event.clientY > height * 0.28 && event.clientY < height * 0.64) {
-    pointerGust = Math.min(1.2, pointerGust + 0.08);
+  if (event.clientX < width * 0.48 && event.clientY > height * 0.42 && event.clientY < height * 0.66) {
+    pointerGust = Math.min(0.72, pointerGust + 0.035);
   }
 });
 window.addEventListener("resize", () => {

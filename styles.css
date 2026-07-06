@@ -201,7 +201,7 @@ button {
   min-height: 92svh;
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(18rem, 1.1fr) minmax(20rem, 0.9fr);
+  grid-template-columns: minmax(24rem, 1.05fr) minmax(26rem, 0.95fr);
   align-items: center;
   padding: 7rem clamp(1rem, 5vw, 6rem) 4.5rem;
   background: #f8f6ec;
@@ -237,9 +237,11 @@ button {
 .hero-copy {
   position: relative;
   z-index: 6;
-  max-width: 31rem;
-  justify-self: center;
+  grid-column: 2;
+  max-width: 34rem;
+  justify-self: end;
   padding-top: 2rem;
+  margin-right: clamp(1rem, 3vw, 3.5rem);
 }
 
 .eyebrow {
@@ -267,8 +269,8 @@ h2 {
 }
 
 h1 {
-  max-width: 10ch;
-  font-size: clamp(2.7rem, 5vw, 5.15rem);
+  max-width: 11ch;
+  font-size: clamp(2.6rem, 4.4vw, 4.7rem);
 }
 
 h2 {
@@ -495,9 +497,10 @@ h3 {
     right: 1rem;
   }
 
-.method {
-  grid-template-columns: 1fr;
-}
+  .hero,
+  .method {
+    grid-template-columns: 1fr;
+  }
 
   .hero {
     min-height: 100svh;
@@ -516,9 +519,11 @@ h3 {
   }
 
   .hero-copy {
+    grid-column: 1;
     justify-self: start;
     max-width: 35rem;
     padding-top: 0;
+    margin-right: 0;
   }
 
   .service-grid {
