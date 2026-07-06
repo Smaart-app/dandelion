@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="el">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dandelion Σύμβουλοι</title>
+    <meta
+      name="description"
+      content="Συμβουλευτική στρατηγικής, ανάπτυξης, ανθρώπινου δυναμικού και απόδοσης με καθαρή σκέψη και πρακτική καθοδήγηση."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Literata:opsz,wght@7..72,500;7..72,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="Primary">
+      <a class="brand" href="#top" aria-label="Dandelion consultants">
+        <span class="brand-mark" aria-hidden="true">
+          <span class="seed-head"></span>
+          <span class="stem"></span>
+        </span>
+        <span>
+          <strong>Dandelion</strong>
+          <small data-i18n="brandSub">Σύμβουλοι</small>
+        </span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="#services" data-i18n="navServices">Υπηρεσίες</a>
+        <a href="#method" data-i18n="navMethod">Προσέγγιση</a>
+        <a href="#contact" data-i18n="navContact">Επικοινωνία</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="language-switcher" aria-label="Language selector">
+          <button class="lang-button is-active" type="button" data-lang="el">EL</button>
+          <button class="lang-button" type="button" data-lang="en">EN</button>
+          <button class="lang-button" type="button" data-lang="fr">FR</button>
+        </div>
+        <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <nav class="mobile-nav" aria-label="Mobile navigation">
+        <a href="#services" data-i18n="navServices">Υπηρεσίες</a>
+        <a href="#method" data-i18n="navMethod">Προσέγγιση</a>
+        <a href="#contact" data-i18n="navContact">Επικοινωνία</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-photo" aria-hidden="true"></div>
+        <canvas id="seedCanvas" aria-hidden="true"></canvas>
+        <div class="sun-wash" aria-hidden="true"></div>
+
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="eyebrow">Συμβουλευτική με καθαρότητα</p>
+          <h1 id="hero-title" data-i18n="heroTitle">Καθαρές σκέψεις. Σωστές αποφάσεις.</h1>
+          <div class="gold-rule"></div>
+          <p data-i18n="heroText">
+            Σας βοηθάμε να δείτε την εικόνα καθαρά, να αξιοποιήσετε τις ευκαιρίες και να προχωρήσετε με σιγουριά.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#contact" data-i18n="heroCta">Ας μιλήσουμε</a>
+            <button class="ghost-button" type="button" id="blowButton" data-i18n="blowButton">Φύσηξε τον κλέφτη</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="services" id="services" aria-labelledby="services-title">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="servicesEyebrow">Πού βοηθάμε</p>
+          <h2 id="services-title" data-i18n="servicesTitle">Συμβουλές που κάνουν τη διαφορά</h2>
+        </div>
+        <div class="service-grid">
+          <article class="service-card">
+            <span class="service-icon compass" aria-hidden="true"></span>
+            <h3 data-i18n="strategyTitle">Στρατηγική</h3>
+            <p data-i18n="strategyText">Σαφής κατεύθυνση, προτεραιότητες και μετρήσιμα αποτελέσματα.</p>
+          </article>
+          <article class="service-card">
+            <span class="service-icon sprout" aria-hidden="true"></span>
+            <h3 data-i18n="growthTitle">Ανάπτυξη</h3>
+            <p data-i18n="growthText">Βιώσιμες λύσεις για μακροπρόθεσμη αξία.</p>
+          </article>
+          <article class="service-card">
+            <span class="service-icon people" aria-hidden="true"></span>
+            <h3 data-i18n="peopleTitle">Ανθρώπινο Δυναμικό</h3>
+            <p data-i18n="peopleText">Ενδυναμώνουμε τους ανθρώπους στον πυρήνα της επιτυχίας.</p>
+          </article>
+          <article class="service-card">
+            <span class="service-icon bars" aria-hidden="true"></span>
+            <h3 data-i18n="performanceTitle">Απόδοση</h3>
+            <p data-i18n="performanceText">Βελτιστοποιούμε διαδικασίες και ενισχύουμε αποτελέσματα.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="method" id="method" aria-labelledby="method-title">
+        <div class="method-copy">
+          <p class="eyebrow" data-i18n="methodEyebrow">Η προσέγγισή μας</p>
+          <h2 id="method-title" data-i18n="methodTitle">Από την πρώτη ιδέα μέχρι την εφαρμογή.</h2>
+          <p data-i18n="methodText">
+            Συνδυάζουμε ανάλυση, ανθρώπινη κατανόηση και πρακτικό σχεδιασμό ώστε κάθε αλλαγή να μπορεί να σταθεί στην καθημερινότητα της ομάδας.
+          </p>
+        </div>
+        <div class="method-steps" aria-label="Consulting process">
+          <div>
+            <strong>01</strong>
+            <span data-i18n="stepOne">Διάγνωση</span>
+          </div>
+          <div>
+            <strong>02</strong>
+            <span data-i18n="stepTwo">Σχεδιασμός</span>
+          </div>
+          <div>
+            <strong>03</strong>
+            <span data-i18n="stepThree">Υλοποίηση</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact" id="contact" aria-labelledby="contact-title">
+        <div>
+          <p class="eyebrow" data-i18n="contactEyebrow">Ξεκινάμε</p>
+          <h2 id="contact-title" data-i18n="contactTitle">Μια καθαρή συζήτηση αρκεί.</h2>
+        </div>
+        <a class="primary-button" href="mailto:hello@dandelion-consultants.example" data-i18n="contactCta">Κλείστε συνάντηση</a>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
