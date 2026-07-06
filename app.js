@@ -118,22 +118,22 @@ function randomBetween(min, max) {
 }
 
 function resetSeed(seed, fromPuff = false) {
-  const sourceX = width < 620 ? width * 0.34 : width * 0.31;
-  const sourceY = width < 620 ? height * 0.42 : height * 0.52;
-  seed.x = fromPuff ? randomBetween(sourceX, sourceX + width * 0.05) : randomBetween(width * 0.34, width * 0.66);
-  seed.y = fromPuff ? randomBetween(sourceY, sourceY + height * 0.045) : randomBetween(height * 0.46, height * 0.58);
-  seed.vx = randomBetween(0.1, 0.34) + gust * randomBetween(0.12, 0.28);
-  seed.vy = randomBetween(-0.035, 0.055);
-  seed.size = randomBetween(0.2, 0.42);
+  const sourceX = width < 620 ? width * 0.35 : width * 0.34;
+  const sourceY = width < 620 ? height * 0.48 : height * 0.58;
+  seed.x = fromPuff ? randomBetween(sourceX, sourceX + width * 0.04) : randomBetween(width * 0.36, width * 0.62);
+  seed.y = fromPuff ? randomBetween(sourceY, sourceY + height * 0.035) : randomBetween(height * 0.53, height * 0.63);
+  seed.vx = randomBetween(0.08, 0.24) + gust * randomBetween(0.08, 0.2);
+  seed.vy = randomBetween(-0.02, 0.04);
+  seed.size = randomBetween(0.14, 0.3);
   seed.angle = randomBetween(0, Math.PI * 2);
   seed.spin = randomBetween(-0.012, 0.012);
-  seed.life = randomBetween(0.28, 0.58);
+  seed.life = randomBetween(0.24, 0.48);
 }
 
 function seedCountForWidth() {
-  if (width < 620) return 18;
-  if (width < 980) return 22;
-  return 28;
+  if (width < 620) return 14;
+  if (width < 980) return 18;
+  return 22;
 }
 
 function initSeeds() {
@@ -193,7 +193,7 @@ function animate(now) {
     seed.angle += seed.spin * (delta / 16);
     seed.life -= 0.0007 * (delta / 16);
 
-    if (seed.x > width + 24 || seed.y < height * 0.4 || seed.y > height * 0.66 || seed.life <= 0.04) {
+    if (seed.x > width + 18 || seed.y < height * 0.48 || seed.y > height * 0.7 || seed.life <= 0.035) {
       resetSeed(seed, true);
     }
 
@@ -205,10 +205,10 @@ function animate(now) {
 
 function puff() {
   pointerGust = 1.55;
-  for (let i = 0; i < Math.min(12, seeds.length); i += 1) {
+  for (let i = 0; i < Math.min(9, seeds.length); i += 1) {
     resetSeed(seeds[i], true);
-    seeds[i].vx += randomBetween(0.55, 1);
-    seeds[i].vy += randomBetween(-0.08, 0.08);
+    seeds[i].vx += randomBetween(0.35, 0.72);
+    seeds[i].vy += randomBetween(-0.045, 0.055);
   }
 }
 
@@ -242,8 +242,8 @@ document.querySelectorAll(".mobile-nav a").forEach((link) => {
 
 blowButton.addEventListener("click", puff);
 window.addEventListener("pointermove", (event) => {
-  if (event.clientX < width * 0.48 && event.clientY > height * 0.42 && event.clientY < height * 0.66) {
-    pointerGust = Math.min(0.72, pointerGust + 0.035);
+  if (event.clientX < width * 0.52 && event.clientY > height * 0.5 && event.clientY < height * 0.72) {
+    pointerGust = Math.min(0.58, pointerGust + 0.025);
   }
 });
 window.addEventListener("resize", () => {
