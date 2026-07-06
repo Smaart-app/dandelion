@@ -91,130 +91,143 @@ const translations = {
   },
 };
 
-const canvas = document.querySelector("#seedCanvas");
-const context = canvas.getContext("2d");
+const seedField = document.querySelector("#seedField");
 const blowButton = document.querySelector("#blowButton");
 const header = document.querySelector(".site-header");
 const menuButton = document.querySelector(".menu-button");
 const seeds = [];
 let width = 0;
 let height = 0;
-let gust = 0.68;
-let pointerGust = 0;
 let lastTime = performance.now();
+let lastPointerPuff = 0;
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function resizeCanvas() {
-  const scale = window.devicePixelRatio || 1;
-  width = canvas.clientWidth;
-  height = canvas.clientHeight;
-  canvas.width = Math.floor(width * scale);
-  canvas.height = Math.floor(height * scale);
-  context.setTransform(scale, 0, 0, scale, 0, 0);
+function measureSeedField() {
+  width = seedField.clientWidth;
+  height = seedField.clientHeight;
 }
 
 function randomBetween(min, max) {
   return min + Math.random() * (max - min);
 }
 
-function resetSeed(seed, fromPuff = false) {
-  const sourceX = width < 620 ? width * 0.36 : width * 0.315;
-  const sourceY = width < 620 ? height * 0.52 : height * 0.51;
-  if (fromPuff) {
-    seed.x = randomBetween(sourceX, sourceX + width * 0.035);
-    seed.y = randomBetween(sourceY - height * 0.012, sourceY + height * 0.025);
-  } else {
-    seed.x = randomBetween(sourceX + width * 0.03, width * 0.82);
-    const progress = (seed.x - sourceX) / (width * 0.52);
-    seed.y = sourceY + progress * height * 0.025 + randomBetween(-height * 0.016, height * 0.02);
+function seedSource() {
+  if (width < 620) {
+    return {
+      x: width * 0.52,
+      y: height * 0.44,
+    };
   }
-  seed.vx = randomBetween(0.09, 0.26) + gust * randomBetween(0.1, 0.24);
-  seed.vy = randomBetween(-0.018, 0.045);
-  seed.size = randomBetween(0.12, 0.26);
+
+  if (width < 980) {
+    return {
+      x: width * 0.42,
+      y: height * 0.42,
+    };
+  }
+
+  return {
+    x: width * 0.35,
+    y: height * 0.4,
+  };
+}
+
+function seedBounds() {
+  const source = seedSource();
+  return {
+    minX: source.x - width * 0.005,
+    maxX: width * 0.83,
+    minY: source.y - height * 0.018,
+    maxY: source.y + height * 0.19,
+  };
+}
+
+function launchSeed(seed, delay = 0) {
+  const source = seedSource();
+  seed.x = source.x + randomBetween(width * 0.005, width * 0.035);
+  seed.y = source.y + randomBetween(-height * 0.008, height * 0.018);
+  seed.vx = randomBetween(0.22, 0.46);
+  seed.vy = randomBetween(-0.006, 0.022);
+  seed.size = randomBetween(0.72, 1.08);
   seed.angle = randomBetween(0, Math.PI * 2);
-  seed.spin = randomBetween(-0.012, 0.012);
-  seed.life = randomBetween(0.24, 0.48);
+  seed.spin = randomBetween(-0.014, 0.014);
+  seed.life = 0;
+  seed.maxLife = randomBetween(0.68, 0.96);
+  seed.delay = delay;
+  seed.el.style.opacity = "0";
 }
 
 function seedCountForWidth() {
-  if (width < 620) return 12;
-  if (width < 980) return 16;
-  return 20;
+  if (width < 620) return 7;
+  if (width < 980) return 8;
+  return 9;
 }
 
 function initSeeds() {
   const target = seedCountForWidth();
   while (seeds.length < target) {
-    const seed = {};
-    resetSeed(seed, false);
-    seeds.push(seed);
+    const el = document.createElement("span");
+    el.className = "animated-seed";
+    seedField.append(el);
+    seeds.push({ el });
+  }
+
+  for (const seed of seeds) {
+    launchSeed(seed, randomBetween(0, 1.2));
+  }
+
+  while (seeds.length > target) {
+    const seed = seeds.pop();
+    seed.el.remove();
   }
   seeds.length = target;
 }
 
-function drawSeed(seed) {
-  context.save();
-  context.translate(seed.x, seed.y);
-  context.rotate(seed.angle);
-  context.globalAlpha = Math.max(0, Math.min(0.42, seed.life));
-  context.strokeStyle = "rgba(74, 66, 45, 0.32)";
-  context.fillStyle = "rgba(255, 255, 255, 0.56)";
-  context.lineWidth = 1;
-  const size = seed.size;
-
-  context.beginPath();
-  context.moveTo(0, 0);
-  context.lineTo(-5 * size, -13 * size);
-  context.stroke();
-
-  for (let i = -2; i <= 2; i += 1) {
-    context.beginPath();
-    context.moveTo(-5 * size, -13 * size);
-    context.quadraticCurveTo((i * 2.5 - 5) * size, -20 * size, (i * 4 - 5) * size, -24 * size);
-    context.strokeStyle = "rgba(255, 255, 255, 0.5)";
-    context.stroke();
-  }
-
-  context.beginPath();
-  context.ellipse(1.2 * size, 2.8 * size, 1.6 * size, 4.2 * size, -0.2, 0, Math.PI * 2);
-  context.fillStyle = "rgba(83, 50, 28, 0.58)";
-  context.fill();
-  context.restore();
+function renderSeed(seed) {
+  const fadeIn = Math.min(1, seed.life / 0.16);
+  const fadeOut = Math.min(1, (seed.maxLife - seed.life) / 0.22);
+  const opacity = Math.max(0, Math.min(0.54, fadeIn, fadeOut));
+  seed.el.style.opacity = String(opacity);
+  seed.el.style.transform = `translate3d(${seed.x}px, ${seed.y}px, 0) rotate(${seed.angle}rad) scale(${seed.size})`;
 }
 
 function animate(now) {
   const delta = Math.min(36, now - lastTime);
   lastTime = now;
-  context.clearRect(0, 0, width, height);
 
-  if (!reducedMotion) {
-    gust = 0.62 + Math.sin(now / 950) * 0.12 + pointerGust;
-    pointerGust *= 0.965;
+  if (reducedMotion) {
+    return;
   }
 
   for (const seed of seeds) {
-    const drift = Math.sin(now / 900 + seed.y * 0.015) * 0.15;
-    seed.x += (seed.vx + gust * 0.42 + drift) * (delta / 16);
-    seed.y += (seed.vy + Math.sin(now / 720 + seed.x * 0.01) * 0.1) * (delta / 16);
-    seed.angle += seed.spin * (delta / 16);
-    seed.life -= 0.0007 * (delta / 16);
-
-    if (seed.x > width + 18 || seed.y < height * 0.45 || seed.y > height * 0.64 || seed.life <= 0.035) {
-      resetSeed(seed, true);
+    const bounds = seedBounds();
+    if (seed.delay > 0) {
+      seed.delay -= delta / 1000;
+      continue;
     }
 
-    drawSeed(seed);
+    const drift = Math.sin(now / 840 + seed.x * 0.01) * 0.038;
+    seed.x += (seed.vx + drift) * (delta / 16);
+    seed.y += (seed.vy + Math.sin(now / 980 + seed.x * 0.008) * 0.018) * (delta / 16);
+    seed.angle += seed.spin * (delta / 16);
+    seed.life += 0.006 * (delta / 16);
+
+    if (seed.x < bounds.minX || seed.x > bounds.maxX || seed.y < bounds.minY || seed.y > bounds.maxY || seed.life >= seed.maxLife) {
+      launchSeed(seed, randomBetween(0.25, 1.4));
+      continue;
+    }
+
+    renderSeed(seed);
   }
 
   requestAnimationFrame(animate);
 }
 
 function puff() {
-  pointerGust = 1.55;
-  for (let i = 0; i < Math.min(9, seeds.length); i += 1) {
-    resetSeed(seeds[i], true);
-    seeds[i].vx += randomBetween(0.35, 0.72);
-    seeds[i].vy += randomBetween(-0.045, 0.055);
+  for (let i = 0; i < Math.min(7, seeds.length); i += 1) {
+    launchSeed(seeds[i], i * 0.04);
+    seeds[i].vx += randomBetween(0.22, 0.46);
+    seeds[i].vy += randomBetween(-0.004, 0.026);
   }
 }
 
@@ -248,15 +261,18 @@ document.querySelectorAll(".mobile-nav a").forEach((link) => {
 
 blowButton.addEventListener("click", puff);
 window.addEventListener("pointermove", (event) => {
-  if (event.clientX > width * 0.27 && event.clientX < width * 0.58 && event.clientY > height * 0.45 && event.clientY < height * 0.64) {
-    pointerGust = Math.min(0.58, pointerGust + 0.025);
+  const source = seedSource();
+  const now = performance.now();
+  if (event.clientX > source.x - width * 0.07 && event.clientX < source.x + width * 0.22 && event.clientY > source.y - height * 0.1 && event.clientY < source.y + height * 0.14 && now - lastPointerPuff > 900) {
+    lastPointerPuff = now;
+    puff();
   }
 });
 window.addEventListener("resize", () => {
-  resizeCanvas();
+  measureSeedField();
   initSeeds();
 });
 
-resizeCanvas();
+measureSeedField();
 initSeeds();
 requestAnimationFrame(animate);

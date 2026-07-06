@@ -133,7 +133,7 @@ button {
 }
 
 .menu-button {
-  display: block;
+  display: none;
   width: 2.6rem;
   height: 2.6rem;
   border: 0;
@@ -179,7 +179,7 @@ button {
 }
 
 .hero-photo,
-#seedCanvas,
+.seed-field,
 .sun-wash {
   position: absolute;
   inset: 0;
@@ -187,15 +187,55 @@ button {
 
 .hero-photo {
   z-index: 0;
-  background-image: url("assets/hero-dandelion-consulting.png");
+  background-image: url("assets/hero-dandelion-consulting.png?v=20260706-seeds-rebuilt");
   background-position: left center;
   background-size: cover;
   transform: scale(1.01);
 }
 
-#seedCanvas {
-  z-index: 3;
+.seed-field {
+  z-index: 7;
+  overflow: hidden;
   pointer-events: none;
+}
+
+.animated-seed {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0.85rem;
+  height: 1.45rem;
+  opacity: 0;
+  transform-origin: 50% 70%;
+  will-change: transform, opacity;
+}
+
+.animated-seed::before,
+.animated-seed::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.animated-seed::before {
+  top: 0;
+  width: 0.7rem;
+  height: 0.72rem;
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.05)),
+    radial-gradient(circle, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.08) 70%);
+  box-shadow:
+    -0.24rem 0.08rem 0 -0.18rem rgba(255, 255, 255, 0.7),
+    0.24rem 0.08rem 0 -0.18rem rgba(255, 255, 255, 0.7);
+}
+
+.animated-seed::after {
+  bottom: 0;
+  width: 1px;
+  height: 0.82rem;
+  background: rgba(86, 59, 35, 0.5);
 }
 
 .sun-wash {
@@ -461,6 +501,10 @@ h3 {
 @media (max-width: 920px) {
   .desktop-nav {
     display: none;
+  }
+
+  .menu-button {
+    display: block;
   }
 
   .mobile-nav {
