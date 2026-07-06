@@ -119,14 +119,14 @@ function randomBetween(min, max) {
 
 function resetSeed(seed, fromPuff = false) {
   const sourceX = width < 620 ? width * 0.36 : width * 0.315;
-  const sourceY = width < 620 ? height * 0.47 : height * 0.405;
+  const sourceY = width < 620 ? height * 0.52 : height * 0.51;
   if (fromPuff) {
     seed.x = randomBetween(sourceX, sourceX + width * 0.035);
     seed.y = randomBetween(sourceY - height * 0.012, sourceY + height * 0.025);
   } else {
     seed.x = randomBetween(sourceX + width * 0.03, width * 0.82);
     const progress = (seed.x - sourceX) / (width * 0.52);
-    seed.y = sourceY + progress * height * 0.055 + randomBetween(-height * 0.018, height * 0.024);
+    seed.y = sourceY + progress * height * 0.025 + randomBetween(-height * 0.016, height * 0.02);
   }
   seed.vx = randomBetween(0.09, 0.26) + gust * randomBetween(0.1, 0.24);
   seed.vy = randomBetween(-0.018, 0.045);
@@ -199,7 +199,7 @@ function animate(now) {
     seed.angle += seed.spin * (delta / 16);
     seed.life -= 0.0007 * (delta / 16);
 
-    if (seed.x > width + 18 || seed.y < height * 0.34 || seed.y > height * 0.58 || seed.life <= 0.035) {
+    if (seed.x > width + 18 || seed.y < height * 0.45 || seed.y > height * 0.64 || seed.life <= 0.035) {
       resetSeed(seed, true);
     }
 
@@ -248,7 +248,7 @@ document.querySelectorAll(".mobile-nav a").forEach((link) => {
 
 blowButton.addEventListener("click", puff);
 window.addEventListener("pointermove", (event) => {
-  if (event.clientX > width * 0.27 && event.clientX < width * 0.58 && event.clientY > height * 0.34 && event.clientY < height * 0.54) {
+  if (event.clientX > width * 0.27 && event.clientX < width * 0.58 && event.clientY > height * 0.45 && event.clientY < height * 0.64) {
     pointerGust = Math.min(0.58, pointerGust + 0.025);
   }
 });
