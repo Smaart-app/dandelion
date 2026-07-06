@@ -118,22 +118,28 @@ function randomBetween(min, max) {
 }
 
 function resetSeed(seed, fromPuff = false) {
-  const sourceX = width < 620 ? width * 0.35 : width * 0.34;
-  const sourceY = width < 620 ? height * 0.48 : height * 0.58;
-  seed.x = fromPuff ? randomBetween(sourceX, sourceX + width * 0.04) : randomBetween(width * 0.36, width * 0.62);
-  seed.y = fromPuff ? randomBetween(sourceY, sourceY + height * 0.035) : randomBetween(height * 0.53, height * 0.63);
-  seed.vx = randomBetween(0.08, 0.24) + gust * randomBetween(0.08, 0.2);
-  seed.vy = randomBetween(-0.02, 0.04);
-  seed.size = randomBetween(0.14, 0.3);
+  const sourceX = width < 620 ? width * 0.36 : width * 0.315;
+  const sourceY = width < 620 ? height * 0.47 : height * 0.405;
+  if (fromPuff) {
+    seed.x = randomBetween(sourceX, sourceX + width * 0.035);
+    seed.y = randomBetween(sourceY - height * 0.012, sourceY + height * 0.025);
+  } else {
+    seed.x = randomBetween(sourceX + width * 0.03, width * 0.82);
+    const progress = (seed.x - sourceX) / (width * 0.52);
+    seed.y = sourceY + progress * height * 0.055 + randomBetween(-height * 0.018, height * 0.024);
+  }
+  seed.vx = randomBetween(0.09, 0.26) + gust * randomBetween(0.1, 0.24);
+  seed.vy = randomBetween(-0.018, 0.045);
+  seed.size = randomBetween(0.12, 0.26);
   seed.angle = randomBetween(0, Math.PI * 2);
   seed.spin = randomBetween(-0.012, 0.012);
   seed.life = randomBetween(0.24, 0.48);
 }
 
 function seedCountForWidth() {
-  if (width < 620) return 14;
-  if (width < 980) return 18;
-  return 22;
+  if (width < 620) return 12;
+  if (width < 980) return 16;
+  return 20;
 }
 
 function initSeeds() {
@@ -193,7 +199,7 @@ function animate(now) {
     seed.angle += seed.spin * (delta / 16);
     seed.life -= 0.0007 * (delta / 16);
 
-    if (seed.x > width + 18 || seed.y < height * 0.48 || seed.y > height * 0.7 || seed.life <= 0.035) {
+    if (seed.x > width + 18 || seed.y < height * 0.34 || seed.y > height * 0.58 || seed.life <= 0.035) {
       resetSeed(seed, true);
     }
 
@@ -242,7 +248,7 @@ document.querySelectorAll(".mobile-nav a").forEach((link) => {
 
 blowButton.addEventListener("click", puff);
 window.addEventListener("pointermove", (event) => {
-  if (event.clientX < width * 0.52 && event.clientY > height * 0.5 && event.clientY < height * 0.72) {
+  if (event.clientX > width * 0.27 && event.clientX < width * 0.58 && event.clientY > height * 0.34 && event.clientY < height * 0.54) {
     pointerGust = Math.min(0.58, pointerGust + 0.025);
   }
 });
