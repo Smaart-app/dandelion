@@ -38,6 +38,7 @@ const translations = {
     heroTitle: "Clear thinking. Better decisions.",
     heroText: "We help you see the whole picture, use opportunities well, and move forward with confidence.",
     heroCta: "Let's talk",
+    heroSecondary: "View services",
     blowButton: "Blow the dandelion",
     servicesEyebrow: "Where we help",
     servicesTitle: "Advice that makes a difference",
@@ -91,152 +92,35 @@ const translations = {
   },
 };
 
-const seedField = document.querySelector("#seedField");
-const blowButton = document.querySelector("#blowButton");
+const heroVideo = document.querySelector("#heroVideo");
 const header = document.querySelector(".site-header");
 const menuButton = document.querySelector(".menu-button");
-const seeds = [];
-let width = 0;
-let height = 0;
-let lastTime = performance.now();
-let lastPointerPuff = 0;
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function measureSeedField() {
-  width = seedField.clientWidth;
-  height = seedField.clientHeight;
-}
-
-function randomBetween(min, max) {
-  return min + Math.random() * (max - min);
-}
-
-function seedSource() {
-  if (width < 620) {
-    return {
-      x: width * 0.52,
-      y: height * 0.44,
-    };
-  }
-
-  if (width < 980) {
-    return {
-      x: width * 0.42,
-      y: height * 0.42,
-    };
-  }
-
-  return {
-    x: width * 0.35,
-    y: height * 0.4,
-  };
-}
-
-function seedBounds() {
-  const source = seedSource();
-  return {
-    minX: source.x - width * 0.005,
-    maxX: width * 0.83,
-    minY: source.y - height * 0.018,
-    maxY: source.y + height * 0.19,
-  };
-}
-
-function launchSeed(seed, delay = 0) {
-  const source = seedSource();
-  seed.x = source.x + randomBetween(width * 0.005, width * 0.035);
-  seed.y = source.y + randomBetween(-height * 0.008, height * 0.018);
-  seed.vx = randomBetween(0.22, 0.46);
-  seed.vy = randomBetween(-0.006, 0.022);
-  seed.size = randomBetween(0.72, 1.08);
-  seed.angle = randomBetween(0, Math.PI * 2);
-  seed.spin = randomBetween(-0.014, 0.014);
-  seed.life = 0;
-  seed.maxLife = randomBetween(0.68, 0.96);
-  seed.delay = delay;
-  seed.el.style.opacity = "0";
-}
-
-function seedCountForWidth() {
-  if (width < 620) return 7;
-  if (width < 980) return 8;
-  return 9;
-}
-
-function initSeeds() {
-  const target = seedCountForWidth();
-  while (seeds.length < target) {
-    const el = document.createElement("span");
-    el.className = "animated-seed";
-    seedField.append(el);
-    seeds.push({ el });
-  }
-
-  for (const seed of seeds) {
-    launchSeed(seed, randomBetween(0, 1.2));
-  }
-
-  while (seeds.length > target) {
-    const seed = seeds.pop();
-    seed.el.remove();
-  }
-  seeds.length = target;
-}
-
-function renderSeed(seed) {
-  const fadeIn = Math.min(1, seed.life / 0.16);
-  const fadeOut = Math.min(1, (seed.maxLife - seed.life) / 0.22);
-  const opacity = Math.max(0, Math.min(0.54, fadeIn, fadeOut));
-  seed.el.style.opacity = String(opacity);
-  seed.el.style.transform = `translate3d(${seed.x}px, ${seed.y}px, 0) rotate(${seed.angle}rad) scale(${seed.size})`;
-}
-
-function animate(now) {
-  const delta = Math.min(36, now - lastTime);
-  lastTime = now;
+function initHeroVideo() {
+  if (!heroVideo) return;
 
   if (reducedMotion) {
-    return;
-  }
-
-  for (const seed of seeds) {
-    const bounds = seedBounds();
-    if (seed.delay > 0) {
-      seed.delay -= delta / 1000;
-      continue;
-    }
-
-    const drift = Math.sin(now / 840 + seed.x * 0.01) * 0.038;
-    seed.x += (seed.vx + drift) * (delta / 16);
-    seed.y += (seed.vy + Math.sin(now / 980 + seed.x * 0.008) * 0.018) * (delta / 16);
-    seed.angle += seed.spin * (delta / 16);
-    seed.life += 0.006 * (delta / 16);
-
-    if (seed.x < bounds.minX || seed.x > bounds.maxX || seed.y < bounds.minY || seed.y > bounds.maxY || seed.life >= seed.maxLife) {
-      launchSeed(seed, randomBetween(0.25, 1.4));
-      continue;
-    }
-
-    renderSeed(seed);
-  }
-
-  requestAnimationFrame(animate);
-}
-
-function puff() {
-  for (let i = 0; i < Math.min(7, seeds.length); i += 1) {
-    launchSeed(seeds[i], i * 0.04);
-    seeds[i].vx += randomBetween(0.22, 0.46);
-    seeds[i].vy += randomBetween(-0.004, 0.026);
+    heroVideo.pause();
+    heroVideo.removeAttribute("autoplay");
   }
 }
 
 function setLanguage(lang) {
   const dictionary = translations[lang] || translations.el;
+  const fallbackTranslations = {
+    el: {
+      heroSecondary: "\u0394\u03b5\u03af\u03c4\u03b5 \u03c5\u03c0\u03b7\u03c1\u03b5\u03c3\u03af\u03b5\u03c2",
+    },
+    fr: {
+      heroSecondary: "Voir les services",
+    },
+  };
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     const key = node.dataset.i18n;
-    if (dictionary[key]) node.textContent = dictionary[key];
+    const value = dictionary[key] || fallbackTranslations[lang]?.[key];
+    if (value) node.textContent = value;
   });
   document.querySelectorAll(".lang-button").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.lang === lang);
@@ -259,20 +143,4 @@ document.querySelectorAll(".mobile-nav a").forEach((link) => {
   });
 });
 
-blowButton.addEventListener("click", puff);
-window.addEventListener("pointermove", (event) => {
-  const source = seedSource();
-  const now = performance.now();
-  if (event.clientX > source.x - width * 0.07 && event.clientX < source.x + width * 0.22 && event.clientY > source.y - height * 0.1 && event.clientY < source.y + height * 0.14 && now - lastPointerPuff > 900) {
-    lastPointerPuff = now;
-    puff();
-  }
-});
-window.addEventListener("resize", () => {
-  measureSeedField();
-  initSeeds();
-});
-
-measureSeedField();
-initSeeds();
-requestAnimationFrame(animate);
+initHeroVideo();

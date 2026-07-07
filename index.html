@@ -56,8 +56,19 @@
 
     <main id="top">
       <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-photo" aria-hidden="true"></div>
-        <div id="seedField" class="seed-field" aria-hidden="true"></div>
+        <div class="hero-video" aria-hidden="true">
+          <video
+            id="heroVideo"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            poster="assets/hero-dandelion-consulting.png"
+          >
+            <source src="assets/hero-dandelion-video.mp4" type="video/mp4" />
+          </video>
+        </div>
         <div class="sun-wash" aria-hidden="true"></div>
 
         <div class="hero-copy">
@@ -69,7 +80,7 @@
           </p>
           <div class="hero-actions">
             <a class="primary-button" href="#contact" data-i18n="heroCta">Ας μιλήσουμε</a>
-            <button class="ghost-button" type="button" id="blowButton" data-i18n="blowButton">Φύσηξε τον κλέφτη</button>
+            <a class="ghost-button" href="#services" data-i18n="heroSecondary">Δείτε υπηρεσίες</a>
           </div>
         </div>
       </section>
@@ -136,6 +147,6 @@
       </section>
     </main>
 
-    <script src="app.js?v=20260706-dom-seeds"></script>
+    <script src="app.js?v=20260707-video-hero"></script>
   </body>
 </html>

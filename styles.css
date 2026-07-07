@@ -178,81 +178,42 @@ button {
   background: #f8f6ec;
 }
 
-.hero-photo,
-.seed-field,
+.hero-video,
 .sun-wash {
   position: absolute;
   inset: 0;
 }
 
-.hero-photo {
+.hero-video {
   z-index: 0;
-  background-image: url("assets/hero-dandelion-consulting.png?v=20260706-seeds-rebuilt");
-  background-position: left center;
-  background-size: cover;
-  transform: scale(1.01);
-}
-
-.seed-field {
-  z-index: 7;
   overflow: hidden;
-  pointer-events: none;
+  background: #d8dccd;
 }
 
-.animated-seed {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0.85rem;
-  height: 1.45rem;
-  opacity: 0;
-  transform-origin: 50% 70%;
-  will-change: transform, opacity;
-}
-
-.animated-seed::before,
-.animated-seed::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.animated-seed::before {
-  top: 0;
-  width: 0.7rem;
-  height: 0.72rem;
-  border-radius: 50%;
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.05)),
-    radial-gradient(circle, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.08) 70%);
-  box-shadow:
-    -0.24rem 0.08rem 0 -0.18rem rgba(255, 255, 255, 0.7),
-    0.24rem 0.08rem 0 -0.18rem rgba(255, 255, 255, 0.7);
-}
-
-.animated-seed::after {
-  bottom: 0;
-  width: 1px;
-  height: 0.82rem;
-  background: rgba(86, 59, 35, 0.5);
+.hero-video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: saturate(0.96) brightness(1.04);
 }
 
 .sun-wash {
   z-index: 2;
   background:
-    linear-gradient(90deg, rgba(255, 249, 237, 0.03) 0 38%, rgba(250, 249, 243, 0.76) 55%, rgba(251, 250, 245, 0.98) 72%),
-    linear-gradient(180deg, rgba(251, 250, 245, 0.08), rgba(251, 250, 245, 0.14));
+    linear-gradient(90deg, rgba(251, 250, 245, 0.98) 0 33%, rgba(251, 250, 245, 0.76) 48%, rgba(251, 250, 245, 0.18) 67%, rgba(251, 250, 245, 0.04)),
+    linear-gradient(180deg, rgba(251, 250, 245, 0.16), rgba(251, 250, 245, 0.04) 42%, rgba(41, 50, 43, 0.1));
 }
 
 .hero-copy {
   position: relative;
   z-index: 6;
-  grid-column: 2;
+  grid-column: 1;
   max-width: 34rem;
-  justify-self: end;
+  justify-self: start;
   padding-top: 2rem;
-  margin-right: clamp(1rem, 3vw, 3.5rem);
+  margin-left: clamp(0rem, 2vw, 2rem);
 }
 
 .eyebrow {
@@ -523,14 +484,14 @@ h3 {
     align-items: end;
   }
 
-  .hero-photo {
-    background-position: 30% center;
+  .hero-video video {
+    object-position: 64% center;
   }
 
   .sun-wash {
     background:
-      linear-gradient(180deg, rgba(251, 250, 245, 0.24), rgba(251, 250, 245, 0.9) 58%, rgba(251, 250, 245, 0.98)),
-      linear-gradient(90deg, rgba(251, 250, 245, 0.02), rgba(251, 250, 245, 0.78));
+      linear-gradient(180deg, rgba(251, 250, 245, 0.12), rgba(251, 250, 245, 0.9) 48%, rgba(251, 250, 245, 0.98)),
+      linear-gradient(90deg, rgba(251, 250, 245, 0.42), rgba(251, 250, 245, 0.1));
   }
 
   .hero-copy {
@@ -548,35 +509,65 @@ h3 {
 
 @media (max-width: 620px) {
   .site-header {
-    align-items: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 0.75rem;
   }
 
   .brand {
+    min-width: 0;
+    gap: 0.5rem;
     letter-spacing: 0.1em;
   }
 
+  .brand strong {
+    font-size: clamp(1rem, 7.5vw, 1.35rem);
+  }
+
   .brand small {
-    letter-spacing: 0.18em;
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+  }
+
+  .brand-mark {
+    flex: 0 0 auto;
+    width: 2.45rem;
+    height: 2.8rem;
   }
 
   .header-actions {
-    gap: 0.4rem;
+    flex: 0 0 auto;
+    gap: 0.25rem;
   }
 
   .language-switcher {
-    gap: 0.12rem;
+    gap: 0.08rem;
+    padding: 0.18rem;
   }
 
   .lang-button {
-    min-width: 1.95rem;
+    min-width: 1.75rem;
+    height: 1.8rem;
+    font-size: 0.68rem;
+  }
+
+  .menu-button {
+    flex: 0 0 auto;
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .menu-button span {
+    width: 1.35rem;
+    margin-block: 0.24rem;
   }
 
   .hero {
     padding-inline: 1rem;
   }
 
-  .hero-photo {
-    background-position: 23% top;
+  .hero-video video {
+    object-position: 66% center;
   }
 
   h1 {
@@ -603,5 +594,46 @@ h3 {
     background:
       linear-gradient(180deg, rgba(251, 250, 245, 0.2), rgba(251, 250, 245, 0.92) 52%, rgba(251, 250, 245, 0.98)),
       linear-gradient(90deg, rgba(251, 250, 245, 0.02), rgba(251, 250, 245, 0.66));
+  }
+}
+
+@media (max-width: 380px) {
+  .site-header {
+    gap: 0.35rem;
+    padding-inline: 0.6rem;
+  }
+
+  .brand {
+    gap: 0.4rem;
+    letter-spacing: 0.075em;
+  }
+
+  .brand strong {
+    font-size: 0.98rem;
+  }
+
+  .brand small {
+    font-size: 0.5rem;
+    letter-spacing: 0.14em;
+  }
+
+  .brand-mark {
+    width: 2.1rem;
+    height: 2.45rem;
+  }
+
+  .lang-button {
+    min-width: 1.55rem;
+    height: 1.65rem;
+    font-size: 0.62rem;
+  }
+
+  .menu-button {
+    width: 2.05rem;
+    height: 2.05rem;
+  }
+
+  .menu-button span {
+    width: 1.25rem;
   }
 }
