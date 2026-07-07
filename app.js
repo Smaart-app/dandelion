@@ -165,7 +165,6 @@ function initHeroVideo() {
   if (reducedMotion) {
     heroVideo.pause();
     heroVideo.removeAttribute("autoplay");
-    heroVideoFrame?.classList.remove("is-playing");
     return;
   }
 
@@ -176,26 +175,13 @@ function initHeroVideo() {
   heroVideo.setAttribute("playsinline", "");
   heroVideo.setAttribute("webkit-playsinline", "");
 
-  heroVideo.addEventListener("playing", () => {
-    heroVideoFrame?.classList.add("is-playing");
-  });
+ const playAttempt = heroVideo.play();
 
-  heroVideo.addEventListener("pause", () => {
-    if (heroVideo.currentTime === 0 || heroVideo.ended) {
-      heroVideoFrame?.classList.remove("is-playing");
-    }
+if (playAttempt) {
+  playAttempt.catch(() => {
+    // Safari may delay or block autoplay until user interaction.
   });
-
-  const playAttempt = heroVideo.play();
-  if (playAttempt) {
-    playAttempt
-      .then(() => {
-        if (!heroVideo.paused) heroVideoFrame?.classList.add("is-playing");
-      })
-      .catch(() => {
-        heroVideoFrame?.classList.remove("is-playing");
-      });
-  }
+}
 }
 
 function setLanguage(lang) {
