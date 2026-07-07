@@ -160,10 +160,41 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matc
 
 function initHeroVideo() {
   if (!heroVideo) return;
+  const heroVideoFrame = heroVideo.closest(".hero-video");
 
   if (reducedMotion) {
     heroVideo.pause();
     heroVideo.removeAttribute("autoplay");
+    heroVideoFrame?.classList.remove("is-playing");
+    return;
+  }
+
+  heroVideo.controls = false;
+  heroVideo.muted = true;
+  heroVideo.defaultMuted = true;
+  heroVideo.playsInline = true;
+  heroVideo.setAttribute("playsinline", "");
+  heroVideo.setAttribute("webkit-playsinline", "");
+
+  heroVideo.addEventListener("playing", () => {
+    heroVideoFrame?.classList.add("is-playing");
+  });
+
+  heroVideo.addEventListener("pause", () => {
+    if (heroVideo.currentTime === 0 || heroVideo.ended) {
+      heroVideoFrame?.classList.remove("is-playing");
+    }
+  });
+
+  const playAttempt = heroVideo.play();
+  if (playAttempt) {
+    playAttempt
+      .then(() => {
+        if (!heroVideo.paused) heroVideoFrame?.classList.add("is-playing");
+      })
+      .catch(() => {
+        heroVideoFrame?.classList.remove("is-playing");
+      });
   }
 }
 

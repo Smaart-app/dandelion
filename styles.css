@@ -197,6 +197,21 @@ button {
   object-fit: cover;
   object-position: center center;
   filter: saturate(0.96) brightness(1.04);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.hero-video.is-playing video {
+  opacity: 1;
+}
+
+.hero-video video::-webkit-media-controls,
+.hero-video video::-webkit-media-controls-panel,
+.hero-video video::-webkit-media-controls-play-button,
+.hero-video video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
 }
 
 .sun-wash {
