@@ -175,13 +175,19 @@ function initHeroVideo() {
   heroVideo.setAttribute("playsinline", "");
   heroVideo.setAttribute("webkit-playsinline", "");
 
- const playAttempt = heroVideo.play();
+// const playAttempt = heroVideo.play();
 
-if (playAttempt) {
-  playAttempt.catch(() => {
-    // Safari may delay or block autoplay until user interaction.
-  });
-}
+// if (playAttempt) {
+//   playAttempt.catch(() => {
+//     // Safari may delay or block autoplay until user interaction.
+//   });
+// }const playAttempt = heroVideo.play();
+
+// if (playAttempt) {
+//   playAttempt.catch(() => {
+//     // Safari may delay or block autoplay until user interaction.
+//   });
+// }
 }
 
 function setLanguage(lang) {
