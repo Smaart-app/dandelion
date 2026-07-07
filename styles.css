@@ -95,13 +95,13 @@ button {
 }
 
 .desktop-nav {
-  gap: clamp(1rem, 3vw, 2.4rem);
+  gap: clamp(0.9rem, 2.4vw, 2rem);
   font-size: 0.88rem;
   font-weight: 600;
 }
 
 .desktop-nav a {
-  opacity: 0.78;
+  opacity: 0.82;
 }
 
 .desktop-nav a:hover {
@@ -304,6 +304,7 @@ h3 {
 }
 
 .services,
+.about,
 .method,
 .contact {
   padding: clamp(4rem, 7vw, 7rem) clamp(1rem, 5vw, 6rem);
@@ -364,18 +365,22 @@ h3 {
 .sprout::after {
   content: "";
   position: absolute;
-  bottom: 0.5rem;
-  left: 1.55rem;
-  width: 1.6rem;
-  height: 1.1rem;
+  width: 1.05rem;
+  height: 1.05rem;
   border: 2px solid currentColor;
-  border-radius: 100% 0;
-  transform: rotate(18deg);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+}
+
+.sprout::before {
+  top: 0.45rem;
+  left: 1.15rem;
 }
 
 .sprout::after {
+  top: 1.25rem;
   left: 0.45rem;
-  transform: scaleX(-1) rotate(18deg);
+  box-shadow: 1.55rem -0.02rem 0 -0.05rem var(--paper), 1.55rem -0.02rem 0 0.08rem currentColor;
 }
 
 .sprout {
@@ -385,7 +390,10 @@ h3 {
 .people::before {
   content: "";
   position: absolute;
-  inset: 0.45rem;
+  left: 0.45rem;
+  right: 0.45rem;
+  bottom: 0.42rem;
+  height: 1.55rem;
   border: 2px solid currentColor;
   border-top: 0;
   border-radius: 0 0 2rem 2rem;
@@ -394,13 +402,17 @@ h3 {
 .people::after {
   content: "";
   position: absolute;
-  top: 0.15rem;
-  left: 1.25rem;
-  width: 0.8rem;
+  top: 0.25rem;
+  left: 0.42rem;
+  width: 0.78rem;
   aspect-ratio: 1;
   border: 2px solid currentColor;
   border-radius: 50%;
-  box-shadow: -1.05rem 0.55rem 0 -0.05rem var(--paper), -1.05rem 0.55rem 0 0.08rem currentColor, 1.05rem 0.55rem 0 -0.05rem var(--paper), 1.05rem 0.55rem 0 0.08rem currentColor;
+  box-shadow:
+    1.1rem 0.8rem 0 -0.05rem var(--paper),
+    1.1rem 0.8rem 0 0.08rem currentColor,
+    2.2rem 0 0 -0.05rem var(--paper),
+    2.2rem 0 0 0.08rem currentColor;
 }
 
 .bars {
@@ -409,6 +421,48 @@ h3 {
     linear-gradient(currentColor, currentColor) 18% 100% / 0.45rem 1rem no-repeat,
     linear-gradient(currentColor, currentColor) 46% 100% / 0.45rem 1.75rem no-repeat,
     linear-gradient(currentColor, currentColor) 74% 100% / 0.45rem 2.7rem no-repeat;
+}
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(20rem, 0.85fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+  background: #fbfaf5;
+}
+
+.about-copy {
+  max-width: 36rem;
+}
+
+.about-panel {
+  position: relative;
+  padding: clamp(1.8rem, 4vw, 3rem);
+  border: 1px solid rgba(93, 109, 85, 0.18);
+  border-radius: 0.5rem;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 250, 240, 0.8)),
+    radial-gradient(circle at top right, rgba(196, 151, 66, 0.18), transparent 38%);
+  box-shadow: 0 1.2rem 3.5rem rgba(41, 50, 43, 0.06);
+}
+
+.about-panel::before {
+  content: "";
+  display: block;
+  width: 5.2rem;
+  height: 2px;
+  margin-bottom: 1.4rem;
+  background: var(--gold);
+}
+
+.about-panel p {
+  margin: 0;
+  color: rgba(41, 50, 43, 0.76);
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
+}
+
+.about-panel p + p {
+  margin-top: 1rem;
 }
 
 .method {
@@ -459,6 +513,31 @@ h3 {
   box-shadow: none;
 }
 
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1.4rem clamp(1rem, 5vw, 6rem);
+  color: rgba(41, 50, 43, 0.72);
+  background: #fbfaf5;
+  border-top: 1px solid rgba(93, 109, 85, 0.14);
+  font-size: 0.82rem;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer a {
+  color: var(--moss);
+  font-weight: 700;
+}
+
+.site-footer a:hover {
+  color: var(--ink);
+}
+
 @media (max-width: 920px) {
   .desktop-nav {
     display: none;
@@ -474,6 +553,7 @@ h3 {
   }
 
   .hero,
+  .about,
   .method {
     grid-template-columns: 1fr;
   }
@@ -504,6 +584,10 @@ h3 {
 
   .service-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .about-panel {
+    max-width: 42rem;
   }
 }
 
@@ -546,9 +630,9 @@ h3 {
   }
 
   .lang-button {
-    min-width: 1.75rem;
+    min-width: 1.58rem;
     height: 1.8rem;
-    font-size: 0.68rem;
+    font-size: 0.64rem;
   }
 
   .menu-button {
@@ -576,7 +660,8 @@ h3 {
   }
 
   .hero-actions,
-  .contact {
+  .contact,
+  .site-footer {
     align-items: stretch;
     flex-direction: column;
   }
@@ -623,9 +708,9 @@ h3 {
   }
 
   .lang-button {
-    min-width: 1.55rem;
+    min-width: 1.38rem;
     height: 1.65rem;
-    font-size: 0.62rem;
+    font-size: 0.58rem;
   }
 
   .menu-button {
