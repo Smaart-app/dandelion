@@ -160,7 +160,12 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matc
 
 function initHeroVideo() {
   if (!heroVideo) return;
-  const heroVideoFrame = heroVideo.closest(".hero-video");
+
+  if (document.documentElement.classList.contains("safari-video-fallback")) {
+    heroVideo.pause();
+    heroVideo.removeAttribute("autoplay");
+    return;
+  }
 
   if (reducedMotion) {
     heroVideo.pause();
@@ -174,20 +179,6 @@ function initHeroVideo() {
   heroVideo.playsInline = true;
   heroVideo.setAttribute("playsinline", "");
   heroVideo.setAttribute("webkit-playsinline", "");
-
-// const playAttempt = heroVideo.play();
-
-// if (playAttempt) {
-//   playAttempt.catch(() => {
-//     // Safari may delay or block autoplay until user interaction.
-//   });
-// }const playAttempt = heroVideo.play();
-
-// if (playAttempt) {
-//   playAttempt.catch(() => {
-//     // Safari may delay or block autoplay until user interaction.
-//   });
-// }
 }
 
 function setLanguage(lang) {
