@@ -14,18 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Literata:opsz,wght@7..72,500;7..72,600&display=swap"
       rel="stylesheet"
     />
-    <script>
-      (function () {
-        var ua = navigator.userAgent;
-        var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-        var isSafari = /^((?!chrome|chromium|android|crios|fxios|edgios).)*safari/i.test(ua);
-
-        if (isIOS || isSafari) {
-          document.documentElement.classList.add("safari-video-fallback");
-        }
-      })();
-    </script>
-    <link rel="stylesheet" href="styles.css?v=20260708-safari-video-fallback" />
+    <link rel="stylesheet" href="styles.css?v=20260708-restore-video" />
   </head>
   <body>
     <header class="site-header" aria-label="Primary">
@@ -188,6 +177,6 @@
       </p>
     </footer>
 
-    <script src="app.js?v=20260708-safari-video-fallback"></script>
+    <script src="app.js?v=20260708-restore-video"></script>
   </body>
 </html>

@@ -187,7 +187,7 @@ button {
 .hero-video {
   z-index: 0;
   overflow: hidden;
-  background: #d8dccd url("assets/hero-dandelion-fallback.jpg") center center / cover no-repeat;
+  background: #d8dccd;
 }
 
 .hero-video video {
@@ -206,10 +206,6 @@ button {
 .hero-video video::-webkit-media-controls-start-playback-button {
   display: none !important;
   -webkit-appearance: none;
-}
-
-.safari-video-fallback .hero-video video {
-  display: none;
 }
 
 .sun-wash {

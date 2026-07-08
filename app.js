@@ -161,12 +161,6 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matc
 function initHeroVideo() {
   if (!heroVideo) return;
 
-  if (document.documentElement.classList.contains("safari-video-fallback")) {
-    heroVideo.pause();
-    heroVideo.removeAttribute("autoplay");
-    return;
-  }
-
   if (reducedMotion) {
     heroVideo.pause();
     heroVideo.removeAttribute("autoplay");
