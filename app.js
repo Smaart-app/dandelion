@@ -156,7 +156,35 @@ const translations = {
 const heroVideo = document.querySelector("#heroVideo");
 const header = document.querySelector(".site-header");
 const menuButton = document.querySelector(".menu-button");
+const brand = document.querySelector(".brand");
+const brandLogo = document.querySelector("#brandLogo");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function initBrandAnimation() {
+  if (!brand || !brandLogo || reducedMotion) return;
+
+  const attachAnimation = () => {
+    const logoRoot = brandLogo.contentDocument?.documentElement;
+    if (!logoRoot) return;
+
+    brand.addEventListener("mouseenter", () => {
+      logoRoot.classList.remove("is-hovered");
+      requestAnimationFrame(() => logoRoot.classList.add("is-hovered"));
+    });
+
+    logoRoot.addEventListener("animationend", (event) => {
+      if (event.animationName === "drift" && event.target.classList.contains("s5")) {
+        logoRoot.classList.remove("is-hovered");
+      }
+    });
+  };
+
+  if (brandLogo.contentDocument) {
+    attachAnimation();
+  } else {
+    brandLogo.addEventListener("load", attachAnimation, { once: true });
+  }
+}
 
 function initHeroVideo() {
   if (!heroVideo) return;
@@ -211,3 +239,4 @@ document.querySelectorAll(".mobile-nav a").forEach((link) => {
 });
 
 initHeroVideo();
+initBrandAnimation();
