@@ -169,14 +169,32 @@ button {
   background: #d8dccd;
 }
 
-.hero-video video {
+.hero-video video,
+.hero-fallback-anim {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
+}
+
+.hero-video video {
   filter: saturate(0.96) brightness(1.04);
   pointer-events: none;
+}
+
+.hero-fallback-anim {
+  display: none;
+  position: absolute;
+  inset: 0;
+}
+
+.hero--fallback-active .hero-video video {
+  display: none;
+}
+
+.hero--fallback-active .hero-fallback-anim {
+  display: block;
 }
 
 .hero-video video::-webkit-media-controls,
@@ -552,7 +570,8 @@ h3 {
     align-items: end;
   }
 
-  .hero-video video {
+  .hero-video video,
+  .hero-fallback-anim {
     object-position: 64% center;
   }
 
@@ -622,7 +641,8 @@ h3 {
     padding-inline: 1rem;
   }
 
-  .hero-video video {
+  .hero-video video,
+  .hero-fallback-anim {
     object-position: 66% center;
   }
 

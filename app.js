@@ -189,18 +189,61 @@ function initBrandAnimation() {
 function initHeroVideo() {
   if (!heroVideo) return;
 
+  const hero = heroVideo.closest(".hero");
+  let fallbackCheckId;
+
+  const setFallback = (isActive) => {
+    hero?.classList.toggle("hero--fallback-active", isActive);
+  };
+
+  const scheduleFallbackCheck = () => {
+    window.clearTimeout(fallbackCheckId);
+    fallbackCheckId = window.setTimeout(() => {
+      if (heroVideo.paused) setFallback(true);
+    }, 800);
+  };
+
+  const tryPlay = () => {
+    heroVideo.controls = false;
+    heroVideo.muted = true;
+    heroVideo.defaultMuted = true;
+    heroVideo.playsInline = true;
+    heroVideo.setAttribute("playsinline", "");
+    heroVideo.setAttribute("webkit-playsinline", "");
+
+    const playPromise = heroVideo.play();
+    scheduleFallbackCheck();
+
+    if (playPromise?.then) {
+      playPromise
+        .then(() => {
+          if (!heroVideo.paused) setFallback(false);
+        })
+        .catch(() => setFallback(true));
+    }
+  };
+
   if (reducedMotion) {
     heroVideo.pause();
     heroVideo.removeAttribute("autoplay");
+    setFallback(false);
     return;
   }
 
-  heroVideo.controls = false;
-  heroVideo.muted = true;
-  heroVideo.defaultMuted = true;
-  heroVideo.playsInline = true;
-  heroVideo.setAttribute("playsinline", "");
-  heroVideo.setAttribute("webkit-playsinline", "");
+  heroVideo.addEventListener("playing", () => setFallback(false));
+  heroVideo.addEventListener("pause", scheduleFallbackCheck);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && hero?.classList.contains("hero--fallback-active")) {
+      tryPlay();
+    }
+  });
+
+  tryPlay();
+  window.setInterval(() => {
+    if (!document.hidden && hero?.classList.contains("hero--fallback-active")) {
+      tryPlay();
+    }
+  }, 5000);
 }
 
 function setLanguage(lang) {
