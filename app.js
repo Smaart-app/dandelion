@@ -160,6 +160,20 @@ const brand = document.querySelector(".brand");
 const brandLogo = document.querySelector("#brandLogo");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+function updateBrandLogo(lang) {
+  if (!brandLogo?.contentDocument) return;
+
+  const dictionary = translations[lang] || translations.el;
+  const subtitle = brandLogo.contentDocument.querySelector("#brand-subtitle");
+  const title = brandLogo.contentDocument.querySelector("#logo-title");
+  const brandSub = dictionary.brandSub || translations.el.brandSub;
+  const label = `Dandelion ${brandSub}`;
+
+  if (subtitle) subtitle.textContent = brandSub.toLocaleUpperCase(lang);
+  if (title) title.textContent = label;
+  brand?.setAttribute("aria-label", label);
+}
+
 function initBrandAnimation() {
   if (!brand || !brandLogo || reducedMotion) return;
 
@@ -170,12 +184,6 @@ function initBrandAnimation() {
     brand.addEventListener("mouseenter", () => {
       logoRoot.classList.remove("is-hovered");
       requestAnimationFrame(() => logoRoot.classList.add("is-hovered"));
-    });
-
-    logoRoot.addEventListener("animationend", (event) => {
-      if (event.animationName === "drift" && event.target.classList.contains("s5")) {
-        logoRoot.classList.remove("is-hovered");
-      }
     });
   };
 
@@ -261,6 +269,8 @@ function setLanguage(lang) {
   document.querySelectorAll(".lang-button").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.lang === lang);
   });
+
+  updateBrandLogo(lang);
 }
 
 document.querySelectorAll(".lang-button").forEach((button) => {
@@ -283,3 +293,12 @@ document.querySelectorAll(".mobile-nav a").forEach((link) => {
 
 initHeroVideo();
 initBrandAnimation();
+if (brandLogo) {
+  const syncLogo = () => updateBrandLogo(document.documentElement.lang || "el");
+
+  if (brandLogo.contentDocument) {
+    syncLogo();
+  } else {
+    brandLogo.addEventListener("load", syncLogo, { once: true });
+  }
+}
