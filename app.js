@@ -273,8 +273,35 @@ function setLanguage(lang) {
   updateBrandLogo(lang);
 }
 
+const languageStorageKey = "dandelion-language";
+
+function getInitialLanguage() {
+  try {
+    const savedLanguage = localStorage.getItem(languageStorageKey);
+    if (savedLanguage && translations[savedLanguage]) return savedLanguage;
+  } catch {
+    // Continue with browser-language detection when storage is unavailable.
+  }
+
+  const browserLanguages = navigator.languages?.length ? navigator.languages : [navigator.language];
+  const supportedLanguage = browserLanguages
+    .map((language) => language?.toLowerCase().split("-")[0])
+    .find((language) => translations[language]);
+
+  return supportedLanguage || "en";
+}
+
 document.querySelectorAll(".lang-button").forEach((button) => {
-  button.addEventListener("click", () => setLanguage(button.dataset.lang));
+  button.addEventListener("click", () => {
+    const lang = button.dataset.lang;
+    setLanguage(lang);
+
+    try {
+      localStorage.setItem(languageStorageKey, lang);
+    } catch {
+      // The language still changes for this visit when storage is unavailable.
+    }
+  });
 });
 
 if (menuButton && header) {
@@ -291,6 +318,7 @@ document.querySelectorAll(".mobile-nav a").forEach((link) => {
   });
 });
 
+setLanguage(getInitialLanguage());
 initHeroVideo();
 initBrandAnimation();
 if (brandLogo) {
