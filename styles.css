@@ -126,6 +126,19 @@ button {
   height: 2px;
   margin: 0.28rem auto;
   background: var(--ink);
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.site-header.nav-open .menu-button span:first-child {
+  transform: translateY(0.405rem) rotate(45deg);
+}
+
+.site-header.nav-open .menu-button span:nth-child(2) {
+  opacity: 0;
+}
+
+.site-header.nav-open .menu-button span:last-child {
+  transform: translateY(-0.405rem) rotate(-45deg);
 }
 
 .mobile-nav {

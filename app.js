@@ -304,18 +304,27 @@ document.querySelectorAll(".lang-button").forEach((button) => {
   });
 });
 
+function closeMobileMenu() {
+  if (!menuButton || !header) return;
+  header.classList.remove("nav-open");
+  menuButton.setAttribute("aria-expanded", "false");
+  menuButton.setAttribute("aria-label", "Open menu");
+}
+
 if (menuButton && header) {
   menuButton.addEventListener("click", () => {
     const isOpen = header.classList.toggle("nav-open");
     menuButton.setAttribute("aria-expanded", String(isOpen));
+    menuButton.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMobileMenu();
   });
 }
 
 document.querySelectorAll(".mobile-nav a").forEach((link) => {
-  link.addEventListener("click", () => {
-    header.classList.remove("nav-open");
-    menuButton.setAttribute("aria-expanded", "false");
-  });
+  link.addEventListener("click", closeMobileMenu);
 });
 
 setLanguage(getInitialLanguage());
