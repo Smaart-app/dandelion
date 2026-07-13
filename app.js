@@ -221,6 +221,8 @@ function initHeroVideo() {
   let hasPlayedOnce = false;
   let playAttemptInFlight = false;
   let lastPlayAttempt = Number.NEGATIVE_INFINITY;
+  let canvasFrameCount = 0;
+  let lastCanvasFrameAt;
 
   const setFallback = (isActive) => {
     hero?.classList.toggle("hero--fallback-active", isActive);
@@ -307,6 +309,8 @@ function initHeroVideo() {
         heroVideoCanvas.width,
         heroVideoCanvas.height,
       );
+      canvasFrameCount += 1;
+      lastCanvasFrameAt = performance.now();
       hero?.classList.add("hero--canvas-active");
     };
 
@@ -328,6 +332,109 @@ function initHeroVideo() {
 
       requestAnimationFrame(watchVideoFrames);
     }
+  }
+
+  if (new URLSearchParams(window.location.search).get("debugVideo") === "1") {
+    const readyStateLabels = [
+      "HAVE_NOTHING",
+      "HAVE_METADATA",
+      "HAVE_CURRENT_DATA",
+      "HAVE_FUTURE_DATA",
+      "HAVE_ENOUGH_DATA",
+    ];
+    const networkStateLabels = [
+      "NETWORK_EMPTY",
+      "NETWORK_IDLE",
+      "NETWORK_LOADING",
+      "NETWORK_NO_SOURCE",
+    ];
+    const debugPanel = document.createElement("pre");
+    let lastMediaEvent = "init";
+
+    debugPanel.setAttribute("aria-live", "polite");
+    debugPanel.style.cssText = [
+      "position:fixed",
+      "z-index:9999",
+      "right:0.5rem",
+      "bottom:0.5rem",
+      "max-width:calc(100vw - 1rem)",
+      "margin:0",
+      "padding:0.7rem",
+      "color:#d8ffd8",
+      "background:rgba(0,0,0,0.88)",
+      "font:12px/1.35 monospace",
+      "white-space:pre-wrap",
+      "pointer-events:none",
+    ].join(";");
+    document.body.append(debugPanel);
+
+    const getDebugSnapshot = () => {
+      const bufferedRanges = [];
+
+      for (let index = 0; index < heroVideo.buffered.length; index += 1) {
+        bufferedRanges.push(
+          `${heroVideo.buffered.start(index).toFixed(2)}-${heroVideo.buffered
+            .end(index)
+            .toFixed(2)}`,
+        );
+      }
+
+      const canvasFrameAge = lastCanvasFrameAt
+        ? `${Math.round(performance.now() - lastCanvasFrameAt)}ms`
+        : "never";
+
+      return {
+        event: lastMediaEvent,
+        time: `${heroVideo.currentTime.toFixed(2)} / ${Number.isFinite(heroVideo.duration) ? heroVideo.duration.toFixed(2) : "?"}`,
+        paused: heroVideo.paused,
+        ended: heroVideo.ended,
+        seeking: heroVideo.seeking,
+        readyState: `${heroVideo.readyState} ${readyStateLabels[heroVideo.readyState] || "UNKNOWN"}`,
+        networkState: `${heroVideo.networkState} ${networkStateLabels[heroVideo.networkState] || "UNKNOWN"}`,
+        buffered: bufferedRanges.join(", ") || "none",
+        canvas: `${canvasFrameCount} frames; last ${canvasFrameAge}`,
+        decoded: heroVideo.webkitDecodedFrameCount ?? "unsupported",
+        dropped: heroVideo.webkitDroppedFrameCount ?? "unsupported",
+        error: heroVideo.error?.code ?? "none",
+      };
+    };
+
+    const renderDebugPanel = () => {
+      const snapshot = getDebugSnapshot();
+      debugPanel.textContent = Object.entries(snapshot)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join("\n");
+    };
+
+    [
+      "loadstart",
+      "loadedmetadata",
+      "loadeddata",
+      "canplay",
+      "canplaythrough",
+      "play",
+      "playing",
+      "pause",
+      "waiting",
+      "stalled",
+      "suspend",
+      "progress",
+      "seeking",
+      "seeked",
+      "emptied",
+      "ended",
+      "error",
+    ].forEach((eventName) => {
+      heroVideo.addEventListener(eventName, () => {
+        lastMediaEvent = eventName;
+        const snapshot = getDebugSnapshot();
+        console.info("[hero-video]", snapshot);
+        renderDebugPanel();
+      });
+    });
+
+    renderDebugPanel();
+    window.setInterval(renderDebugPanel, 500);
   }
 
   if (reducedMotion) {
