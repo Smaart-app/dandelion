@@ -210,6 +210,14 @@ button {
   display: block;
 }
 
+.is-safari .hero-video video {
+  display: none;
+}
+
+.is-safari .hero-fallback-anim {
+  display: block;
+}
+
 .hero-video video::-webkit-media-controls,
 .hero-video video::-webkit-media-controls-panel,
 .hero-video video::-webkit-media-controls-play-button,

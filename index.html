@@ -41,7 +41,15 @@
     <link rel="icon" href="assets/favicon.ico?v=20260713-transparent" sizes="any" />
     <link rel="mask-icon" href="assets/favicon.svg?v=20260713-transparent" color="#7f642e" />
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=20260713-transparent" />
-    <link rel="stylesheet" href="styles.css?v=20260713-mobile-menu" />
+    <script>
+      const browserUserAgent = navigator.userAgent;
+      const isSafari =
+        /Safari/i.test(browserUserAgent) &&
+        !/(Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS)/i.test(browserUserAgent);
+
+      if (isSafari) document.documentElement.classList.add("is-safari");
+    </script>
+    <link rel="stylesheet" href="styles.css?v=20260713-safari-video-fallback" />
   </head>
   <body>
     <header class="site-header" aria-label="Primary">
@@ -206,6 +214,6 @@
       </p>
     </footer>
 
-    <script src="app.js?v=20260713-logo-language-sync"></script>
+    <script src="app.js?v=20260713-safari-video-fallback"></script>
   </body>
 </html>

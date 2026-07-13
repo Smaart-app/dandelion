@@ -216,9 +216,7 @@ function initHeroVideo() {
   if (!heroVideo) return;
 
   const hero = heroVideo.closest(".hero");
-  const loopLeadTime = 0.12;
   let fallbackCheckId;
-  let isResettingLoop = false;
 
   const setFallback = (isActive) => {
     hero?.classList.toggle("hero--fallback-active", isActive);
@@ -251,23 +249,12 @@ function initHeroVideo() {
     }
   };
 
-  const resetVideoLoop = () => {
-    if (isResettingLoop || !Number.isFinite(heroVideo.duration)) return;
-
-    isResettingLoop = true;
-    heroVideo.currentTime = 0;
-
-    if (heroVideo.paused) tryPlay();
-  };
-
-  const resetBeforeVideoEnds = () => {
-    if (
-      !heroVideo.paused &&
-      heroVideo.duration - heroVideo.currentTime <= loopLeadTime
-    ) {
-      resetVideoLoop();
-    }
-  };
+  if (document.documentElement.classList.contains("is-safari")) {
+    heroVideo.pause();
+    heroVideo.removeAttribute("autoplay");
+    setFallback(true);
+    return;
+  }
 
   if (reducedMotion) {
     heroVideo.pause();
@@ -278,21 +265,6 @@ function initHeroVideo() {
 
   heroVideo.addEventListener("playing", () => setFallback(false));
   heroVideo.addEventListener("pause", scheduleFallbackCheck);
-  heroVideo.addEventListener("seeked", () => {
-    isResettingLoop = false;
-  });
-  heroVideo.addEventListener("timeupdate", resetBeforeVideoEnds);
-  heroVideo.addEventListener("ended", resetVideoLoop);
-
-  if ("requestVideoFrameCallback" in heroVideo) {
-    const watchVideoFrames = () => {
-      resetBeforeVideoEnds();
-      heroVideo.requestVideoFrameCallback(watchVideoFrames);
-    };
-
-    heroVideo.requestVideoFrameCallback(watchVideoFrames);
-  }
-
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden && hero?.classList.contains("hero--fallback-active")) {
       tryPlay();
