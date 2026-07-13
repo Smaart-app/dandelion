@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 150" role="img" aria-labelledby="logo-title logo-desc">
-  <title id="logo-title">Dandelion Σύμβουλοι</title>
+  <title id="logo-title">Dandelion Consultants</title>
   <desc id="logo-desc">A refined dandelion flower moving gently in the wind.</desc>
   <style>
     .bloom{transform-box:fill-box;transform-origin:52% 100%;animation:wind-sway 4.8s ease-in-out infinite}
@@ -14,5 +14,5 @@
       <use href="#logo-ray"/><use href="#logo-ray" transform="rotate(22.5 67 75)"/><use href="#logo-ray" transform="rotate(45 67 75)"/><use href="#logo-ray" transform="rotate(67.5 67 75)"/><use href="#logo-ray" transform="rotate(90 67 75)"/><use href="#logo-ray" transform="rotate(112.5 67 75)"/><use href="#logo-ray" transform="rotate(135 67 75)"/><use href="#logo-ray" transform="rotate(157.5 67 75)"/><use href="#logo-ray" transform="rotate(180 67 75)"/><use href="#logo-ray" transform="rotate(202.5 67 75)"/><use href="#logo-ray" transform="rotate(225 67 75)"/><use href="#logo-ray" transform="rotate(247.5 67 75)"/><use href="#logo-ray" transform="rotate(270 67 75)"/><use href="#logo-ray" transform="rotate(292.5 67 75)"/><use href="#logo-ray" transform="rotate(315 67 75)"/><use href="#logo-ray" transform="rotate(337.5 67 75)"/><circle cx="67" cy="75" r="7" fill="currentColor"/>
     </g>
   </g>
-  <g fill="#29322b"><text x="150" y="79" font-family="Georgia, 'Times New Roman', serif" font-size="47" letter-spacing="5.5">DANDELION</text><text id="brand-subtitle" x="152" y="111" font-family="Arial, sans-serif" font-size="15" letter-spacing="8.5">ΣΥΜΒΟΥΛΟΙ</text></g>
+  <g fill="#29322b"><text x="150" y="79" font-family="Georgia, 'Times New Roman', serif" font-size="47" letter-spacing="5.5">DANDELION</text><text id="brand-subtitle" x="152" y="111" font-family="Arial, sans-serif" font-size="15" letter-spacing="8.5">CONSULTANTS</text></g>
 </svg>

@@ -159,18 +159,36 @@ const menuButton = document.querySelector(".menu-button");
 const brand = document.querySelector(".brand");
 const brandLogo = document.querySelector("#brandLogo");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let pendingBrandLanguage = document.documentElement.lang || "el";
+let brandSyncFrame;
+let brandSyncDeadline = 0;
 
-function updateBrandLogo(lang) {
-  if (!brandLogo?.contentDocument) return;
+function updateBrandLogo(lang, isRetry = false) {
+  pendingBrandLanguage = lang;
+  if (!isRetry) brandSyncDeadline = performance.now() + 5000;
+
+  const logoDocument = brandLogo?.contentDocument;
+  const subtitle = logoDocument?.querySelector("#brand-subtitle");
+  const title = logoDocument?.querySelector("#logo-title");
+
+  if ((!subtitle || !title) && performance.now() < brandSyncDeadline) {
+    if (!brandSyncFrame) {
+      brandSyncFrame = requestAnimationFrame(() => {
+        brandSyncFrame = undefined;
+        updateBrandLogo(pendingBrandLanguage, true);
+      });
+    }
+    return;
+  }
+
+  if (!subtitle || !title) return;
 
   const dictionary = translations[lang] || translations.el;
-  const subtitle = brandLogo.contentDocument.querySelector("#brand-subtitle");
-  const title = brandLogo.contentDocument.querySelector("#logo-title");
   const brandSub = dictionary.brandSub || translations.el.brandSub;
   const label = `Dandelion ${brandSub}`;
 
-  if (subtitle) subtitle.textContent = brandSub.toLocaleUpperCase(lang);
-  if (title) title.textContent = label;
+  subtitle.textContent = brandSub.toLocaleUpperCase(lang);
+  title.textContent = label;
   brand?.setAttribute("aria-label", label);
 }
 
