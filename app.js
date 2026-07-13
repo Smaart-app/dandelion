@@ -278,10 +278,7 @@ function initHeroVideo() {
     heroVideoCanvas
   ) {
     const canvasScale = 0.5;
-    const canvasContext = heroVideoCanvas.getContext("2d", {
-      alpha: false,
-      desynchronized: true,
-    });
+    const canvasContext = heroVideoCanvas.getContext("2d", { alpha: false });
 
     const drawVideoFrame = () => {
       if (!canvasContext || heroVideo.readyState < 2) return;
