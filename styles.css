@@ -183,6 +183,7 @@ button {
 }
 
 .hero-video video,
+.hero-video-canvas,
 .hero-fallback-anim {
   display: block;
   width: 100%;
@@ -191,11 +192,16 @@ button {
   object-position: center center;
 }
 
-.hero-video video {
+.hero-video video,
+.hero-video-canvas {
   filter: saturate(0.96) brightness(1.04);
+}
+
+.hero-video video {
   pointer-events: none;
 }
 
+.hero-video-canvas,
 .hero-fallback-anim {
   display: none;
   position: absolute;
@@ -211,10 +217,26 @@ button {
 }
 
 .is-safari .hero-video video {
-  display: none;
+  opacity: 0;
 }
 
 .is-safari .hero-fallback-anim {
+  display: block;
+}
+
+.is-safari .hero--canvas-active .hero-video-canvas {
+  display: block;
+}
+
+.is-safari .hero--canvas-active .hero-fallback-anim {
+  display: none;
+}
+
+.is-safari .hero--fallback-active .hero-video-canvas {
+  display: none;
+}
+
+.is-safari .hero--fallback-active .hero-fallback-anim {
   display: block;
 }
 
@@ -592,6 +614,7 @@ h3 {
   }
 
   .hero-video video,
+  .hero-video-canvas,
   .hero-fallback-anim {
     object-position: 64% center;
   }
@@ -663,6 +686,7 @@ h3 {
   }
 
   .hero-video video,
+  .hero-video-canvas,
   .hero-fallback-anim {
     object-position: 66% center;
   }
