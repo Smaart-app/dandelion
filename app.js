@@ -219,6 +219,8 @@ function initHeroVideo() {
   const hero = heroVideo.closest(".hero");
   let fallbackCheckId;
   let hasPlayedOnce = false;
+  let playAttemptInFlight = false;
+  let lastPlayAttempt = Number.NEGATIVE_INFINITY;
 
   const setFallback = (isActive) => {
     hero?.classList.toggle("hero--fallback-active", isActive);
@@ -232,6 +234,10 @@ function initHeroVideo() {
   };
 
   const tryPlay = () => {
+    const now = performance.now();
+    if (playAttemptInFlight || now - lastPlayAttempt < 2000) return;
+
+    lastPlayAttempt = now;
     heroVideo.controls = false;
     heroVideo.muted = true;
     heroVideo.defaultMuted = true;
@@ -239,17 +245,31 @@ function initHeroVideo() {
     heroVideo.setAttribute("playsinline", "");
     heroVideo.setAttribute("webkit-playsinline", "");
 
-    const playPromise = heroVideo.play();
+    playAttemptInFlight = true;
+    let playPromise;
+
+    try {
+      playPromise = heroVideo.play();
+    } catch {
+      playAttemptInFlight = false;
+      if (!hasPlayedOnce) setFallback(true);
+      return;
+    }
+
     scheduleFallbackCheck();
 
     if (playPromise?.then) {
       playPromise
         .then(() => {
+          playAttemptInFlight = false;
           if (!heroVideo.paused) setFallback(false);
         })
         .catch(() => {
+          playAttemptInFlight = false;
           if (!hasPlayedOnce) setFallback(true);
         });
+    } else {
+      playAttemptInFlight = false;
     }
   };
 
@@ -257,20 +277,39 @@ function initHeroVideo() {
     document.documentElement.classList.contains("is-safari") &&
     heroVideoCanvas
   ) {
-    const canvasContext = heroVideoCanvas.getContext("2d", { alpha: false });
+    const canvasScale = 0.5;
+    const canvasContext = heroVideoCanvas.getContext("2d", {
+      alpha: false,
+      desynchronized: true,
+    });
 
     const drawVideoFrame = () => {
       if (!canvasContext || heroVideo.readyState < 2) return;
 
+      const canvasWidth = Math.max(
+        1,
+        Math.round(heroVideo.videoWidth * canvasScale),
+      );
+      const canvasHeight = Math.max(
+        1,
+        Math.round(heroVideo.videoHeight * canvasScale),
+      );
+
       if (
-        heroVideoCanvas.width !== heroVideo.videoWidth ||
-        heroVideoCanvas.height !== heroVideo.videoHeight
+        heroVideoCanvas.width !== canvasWidth ||
+        heroVideoCanvas.height !== canvasHeight
       ) {
-        heroVideoCanvas.width = heroVideo.videoWidth;
-        heroVideoCanvas.height = heroVideo.videoHeight;
+        heroVideoCanvas.width = canvasWidth;
+        heroVideoCanvas.height = canvasHeight;
       }
 
-      canvasContext.drawImage(heroVideo, 0, 0);
+      canvasContext.drawImage(
+        heroVideo,
+        0,
+        0,
+        heroVideoCanvas.width,
+        heroVideoCanvas.height,
+      );
       hero?.classList.add("hero--canvas-active");
     };
 
