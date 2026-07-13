@@ -218,6 +218,7 @@ function initHeroVideo() {
 
   const hero = heroVideo.closest(".hero");
   let fallbackCheckId;
+  let hasPlayedOnce = false;
 
   const setFallback = (isActive) => {
     hero?.classList.toggle("hero--fallback-active", isActive);
@@ -226,7 +227,7 @@ function initHeroVideo() {
   const scheduleFallbackCheck = () => {
     window.clearTimeout(fallbackCheckId);
     fallbackCheckId = window.setTimeout(() => {
-      if (heroVideo.paused) setFallback(true);
+      if (heroVideo.paused && !hasPlayedOnce) setFallback(true);
     }, 800);
   };
 
@@ -246,7 +247,9 @@ function initHeroVideo() {
         .then(() => {
           if (!heroVideo.paused) setFallback(false);
         })
-        .catch(() => setFallback(true));
+        .catch(() => {
+          if (!hasPlayedOnce) setFallback(true);
+        });
     }
   };
 
@@ -298,17 +301,26 @@ function initHeroVideo() {
     return;
   }
 
-  heroVideo.addEventListener("playing", () => setFallback(false));
+  heroVideo.addEventListener("playing", () => {
+    hasPlayedOnce = true;
+    setFallback(false);
+  });
   heroVideo.addEventListener("pause", scheduleFallbackCheck);
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && hero?.classList.contains("hero--fallback-active")) {
+    if (
+      !document.hidden &&
+      (heroVideo.paused || hero?.classList.contains("hero--fallback-active"))
+    ) {
       tryPlay();
     }
   });
 
   tryPlay();
   window.setInterval(() => {
-    if (!document.hidden && hero?.classList.contains("hero--fallback-active")) {
+    if (
+      !document.hidden &&
+      (heroVideo.paused || hero?.classList.contains("hero--fallback-active"))
+    ) {
       tryPlay();
     }
   }, 5000);
